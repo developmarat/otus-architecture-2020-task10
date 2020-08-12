@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: task10-order-config
+data:
+  DATABASE_HOST: postgres-order
+  DATABASE_USER: myuser
+  DATABASE_DB: myapp
+  PAYMENT_URL: task10-payment-service:9000
+  STORE_URL: task10-store-service:9000
+  DELIVERY_URL: task10-delivery-service:9000
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: task10-order-secret
+type: Opaque
+data:
+  DATABASE_PASSWORD: cGFzc3dk
+  DATABASE_PASSWORD_WITH_NEW_LINE: cGFzc3dkCg==

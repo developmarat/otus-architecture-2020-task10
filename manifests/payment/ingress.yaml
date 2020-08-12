@@ -1,0 +1,15 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: task10-payment-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /srv/invoice/$2
+spec:
+  rules:
+  - host: arch.homework
+    http:
+      paths:
+      - path: /otusapp/srv/invoice($|/)(.*)
+        backend:
+          serviceName: task10-payment-service
+          servicePort: 9000

@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: task10-store-service
+  labels:
+    app: task10-store-app
+spec:
+  selector:
+    app: task10-store-app
+  ports:
+    - name: web
+      protocol: TCP
+      port: 9000
+      targetPort: web
+  type: NodePort

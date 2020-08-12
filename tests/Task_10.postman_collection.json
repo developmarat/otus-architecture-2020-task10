@@ -1,0 +1,1107 @@
+{
+	"info": {
+		"_postman_id": "01ffa95f-5718-4e0c-999f-81a394c22557",
+		"name": "Task 10 git",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Create invoice",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "95170115-bf45-4680-8f82-f718018444fa",
+						"exec": [
+							"var responseJSON = JSON.parse(responseBody)\r",
+							"pm.collectionVariables.set(\"invoiceId\", responseJSON[\"id\"])\r",
+							"\r",
+							"tests[\"[INFO] Request: \" + (('data' in request) ? request['data'] : '') ] = true\r",
+							"tests[\"[INFO] Response: \" + responseBody] = true"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "X-Username",
+						"value": "pes",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"paySystemId\":{{paySystemId}}\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/otusapp/srv/invoice",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"otusapp",
+						"srv",
+						"invoice"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get invoice",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "ebf08daa-d19f-4479-b44a-8ff4d03eca73",
+						"exec": [
+							"tests[\"[INFO] Request: \" + (('data' in request) ? request['data'] : '') ] = true\r",
+							"tests[\"[INFO] Response: \" + responseBody] = true"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "X-Username",
+						"type": "text",
+						"value": "pes"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/otusapp/srv/invoice/{{invoiceId}}",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"otusapp",
+						"srv",
+						"invoice",
+						"{{invoiceId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get last orderId (1 try)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "bef2d953-d7ee-4c93-b666-1f78e80cc3e1",
+						"exec": [
+							"var responseJSON = JSON.parse(responseBody)\r",
+							"pm.collectionVariables.set(\"lastOrderId\", responseJSON[\"lastOrderId\"])\r",
+							"\r",
+							"tests[\"[INFO] Request: \" + (('data' in request) ? request['data'] : '') ] = true\r",
+							"tests[\"[INFO] Response: \" + responseBody] = true"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "X-Username",
+						"type": "text",
+						"value": "pes"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/otusapp/order",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"otusapp",
+						"order"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create order (1 try)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "1afecc5e-0fb2-4bd7-8da1-5e361acae792",
+						"exec": [
+							"var responseJSON = JSON.parse(responseBody)\r",
+							"pm.collectionVariables.set(\"orderId\", responseJSON[\"id\"])\r",
+							"\r",
+							"tests[\"[INFO] Request: \" + (('data' in request) ? request['data'] : '') ] = true\r",
+							"tests[\"[INFO] Response: \" + responseBody] = true"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "ab3ed6f4-e28c-40f0-9983-d2191801de1c",
+						"exec": [
+							"pm.collectionVariables.set(\"deliveryHour\", Number(pm.collectionVariables.get(\"deliveryHour\"))+1)",
+							"pm.collectionVariables.set(\"productId\", Number(pm.collectionVariables.get(\"productId\"))+1001)",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "X-Username",
+						"value": "pes",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"lastOrderId\": {{lastOrderId}},\r\n    \"order\": {\r\n        \"clientId\": {{clientId}},\r\n        \"products\": [\r\n            {\r\n                \"productId\": {{productId}},\r\n                \"count\":2\r\n            }\r\n        ],\r\n        \"deliveryAddress\": \"г. Санкт-Петербург, ул. Ленина, д. 3, кв 74\",\r\n        \"invoiceId\": {{invoiceId}},\r\n        \"deliveryHour\": {{deliveryHour}}\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/otusapp/order",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"otusapp",
+						"order"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update invoice status",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "5503ae07-151a-4aba-a23a-5c25decdea20",
+						"exec": [
+							"tests[\"[INFO] Request: \" + (('data' in request) ? request['data'] : '') ] = true\r",
+							"tests[\"[INFO] Response: \" + responseBody] = true"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "X-Username",
+						"type": "text",
+						"value": "pes"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"status\":\"PAID\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/otusapp/srv/invoice/{{invoiceId}}",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"otusapp",
+						"srv",
+						"invoice",
+						"{{invoiceId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get invoice (after update) ",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "08d152ed-2775-4170-9813-3dd1f5d7ad94",
+						"exec": [
+							"tests[\"[INFO] Request: \" + (('data' in request) ? request['data'] : '') ] = true\r",
+							"tests[\"[INFO] Response: \" + responseBody] = true"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "X-Username",
+						"type": "text",
+						"value": "pes"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/otusapp/srv/invoice/{{invoiceId}}",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"otusapp",
+						"srv",
+						"invoice",
+						"{{invoiceId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get last orderId (2 try)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "9e8e1d5e-ce19-4783-bd34-e9fcc81dc25b",
+						"exec": [
+							"var responseJSON = JSON.parse(responseBody)\r",
+							"pm.collectionVariables.set(\"lastOrderId\", responseJSON[\"lastOrderId\"])\r",
+							"\r",
+							"tests[\"[INFO] Request: \" + (('data' in request) ? request['data'] : '') ] = true\r",
+							"tests[\"[INFO] Response: \" + responseBody] = true"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "X-Username",
+						"type": "text",
+						"value": "pes"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/otusapp/order",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"otusapp",
+						"order"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create order (2 try)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "0976fd0b-3f6c-4ed7-8741-759b77bb31e5",
+						"exec": [
+							"var responseJSON = JSON.parse(responseBody)\r",
+							"pm.collectionVariables.set(\"orderId\", responseJSON[\"id\"])\r",
+							"\r",
+							"tests[\"[INFO] Request: \" + (('data' in request) ? request['data'] : '') ] = true\r",
+							"tests[\"[INFO] Response: \" + responseBody] = true"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "X-Username",
+						"value": "pes",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"lastOrderId\": {{lastOrderId}},\r\n    \"order\": {\r\n        \"clientId\": {{clientId}},\r\n        \"products\": [\r\n            {\r\n                \"productId\": {{productId}},\r\n                \"count\":2\r\n            }\r\n        ],\r\n        \"deliveryAddress\": \"г. Санкт-Петербург, ул. Ленина, д. 3, кв 74\",\r\n        \"invoiceId\": {{invoiceId}},\r\n        \"deliveryHour\": {{deliveryHour}}\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/otusapp/order",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"otusapp",
+						"order"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create storage unit",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "3a4c81ab-87e8-4287-95fe-fb97ddd29e46",
+						"exec": [
+							"tests[\"[INFO] Request: \" + (('data' in request) ? request['data'] : '') ] = true\r",
+							"tests[\"[INFO] Response: \" + responseBody] = true"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "X-Username",
+						"type": "text",
+						"value": "pes"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"productId\":{{productId}},\r\n    \"count\":10\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/otusapp/srv/store",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"otusapp",
+						"srv",
+						"store"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get storage unit by product",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "0a8e04aa-2b5f-4d3b-ace6-f874527ce4c6",
+						"exec": [
+							"tests[\"[INFO] Request: \" + (('data' in request) ? request['data'] : '') ] = true\r",
+							"tests[\"[INFO] Response: \" + responseBody] = true"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "X-Username",
+						"type": "text",
+						"value": "pes"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/otusapp/srv/store/product/{{productId}}",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"otusapp",
+						"srv",
+						"store",
+						"product",
+						"{{productId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get last orderId (3 try)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "53561f89-2c27-443d-8b9d-eaf09ae9c308",
+						"exec": [
+							"var responseJSON = JSON.parse(responseBody)\r",
+							"pm.collectionVariables.set(\"lastOrderId\", responseJSON[\"lastOrderId\"])\r",
+							"\r",
+							"tests[\"[INFO] Request: \" + (('data' in request) ? request['data'] : '') ] = true\r",
+							"tests[\"[INFO] Response: \" + responseBody] = true"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "X-Username",
+						"type": "text",
+						"value": "pes"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/otusapp/order",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"otusapp",
+						"order"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create order (3 try)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "92a5e988-19e3-4ed3-9ede-878941d1b833",
+						"exec": [
+							"var responseJSON = JSON.parse(responseBody)\r",
+							"pm.collectionVariables.set(\"orderId\", responseJSON[\"id\"])\r",
+							"\r",
+							"tests[\"[INFO] Request: \" + (('data' in request) ? request['data'] : '') ] = true\r",
+							"tests[\"[INFO] Response: \" + responseBody] = true"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "X-Username",
+						"value": "pes",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"lastOrderId\": {{lastOrderId}},\r\n    \"order\": {\r\n        \"clientId\": {{clientId}},\r\n        \"products\": [\r\n            {\r\n                \"productId\": {{productId}},\r\n                \"count\":2\r\n            }\r\n        ],\r\n        \"deliveryAddress\": \"г. Санкт-Петербург, ул. Ленина, д. 3, кв 74\",\r\n        \"invoiceId\": {{invoiceId}},\r\n        \"deliveryHour\": {{deliveryHour}}\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/otusapp/order",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"otusapp",
+						"order"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get storage unit by product (after 3 try)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "a9d27810-c406-4f89-b93b-5ccf81bb330d",
+						"exec": [
+							"tests[\"[INFO] Request: \" + (('data' in request) ? request['data'] : '') ] = true\r",
+							"tests[\"[INFO] Response: \" + responseBody] = true"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "X-Username",
+						"type": "text",
+						"value": "pes"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/otusapp/srv/store/product/{{productId}}",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"otusapp",
+						"srv",
+						"store",
+						"product",
+						"{{productId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create delivery schedule item",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "babaa7c5-f348-4c69-ae51-92b4cdbe4357",
+						"exec": [
+							"tests[\"[INFO] Request: \" + (('data' in request) ? request['data'] : '') ] = true\r",
+							"tests[\"[INFO] Response: \" + responseBody] = true"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "X-Username",
+						"type": "text",
+						"value": "pes"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"hour\": {{deliveryHour}}\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/otusapp/srv/delivery",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"otusapp",
+						"srv",
+						"delivery"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get last orderId (4 try)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "90af0e92-4d2d-425d-a43c-5e35e2af583b",
+						"exec": [
+							"var responseJSON = JSON.parse(responseBody)\r",
+							"pm.collectionVariables.set(\"lastOrderId\", responseJSON[\"lastOrderId\"])\r",
+							"\r",
+							"tests[\"[INFO] Request: \" + (('data' in request) ? request['data'] : '') ] = true\r",
+							"tests[\"[INFO] Response: \" + responseBody] = true"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "X-Username",
+						"type": "text",
+						"value": "pes"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/otusapp/order",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"otusapp",
+						"order"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create order (4 try)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "8d4916af-28fe-4000-bb8a-98597c0fb860",
+						"exec": [
+							"var responseJSON = JSON.parse(responseBody)\r",
+							"pm.collectionVariables.set(\"orderId\", responseJSON[\"id\"])\r",
+							"\r",
+							"tests[\"[INFO] Request: \" + (('data' in request) ? request['data'] : '') ] = true\r",
+							"tests[\"[INFO] Response: \" + responseBody] = true"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "X-Username",
+						"value": "pes",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"lastOrderId\": {{lastOrderId}},\r\n    \"order\": {\r\n        \"clientId\": {{clientId}},\r\n        \"products\": [\r\n            {\r\n                \"productId\": {{productId}},\r\n                \"count\":2\r\n            }\r\n        ],\r\n        \"deliveryAddress\": \"г. Санкт-Петербург, ул. Ленина, д. 3, кв 74\",\r\n        \"invoiceId\": {{invoiceId}},\r\n        \"deliveryHour\": {{deliveryHour}}\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/otusapp/order",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"otusapp",
+						"order"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get storage unit by product (after 4 try)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "9e9c4e0a-4e98-4af9-bf4b-d6692695bfc1",
+						"exec": [
+							"tests[\"[INFO] Request: \" + (('data' in request) ? request['data'] : '') ] = true\r",
+							"tests[\"[INFO] Response: \" + responseBody] = true"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "X-Username",
+						"type": "text",
+						"value": "pes"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/otusapp/srv/store/product/{{productId}}",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"otusapp",
+						"srv",
+						"store",
+						"product",
+						"{{productId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get delivery schedule list (after 4 try)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "c1532d34-377d-4499-95d7-c6f95e3d94ac",
+						"exec": [
+							"tests[\"[INFO] Request: \" + (('data' in request) ? request['data'] : '') ] = true\r",
+							"tests[\"[INFO] Response: \" + responseBody] = true"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "X-Username",
+						"type": "text",
+						"value": "pes"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/otusapp/srv/delivery",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"otusapp",
+						"srv",
+						"delivery"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get last orderId",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "1a01757a-42ad-4b8b-943f-a84d2b3af729",
+						"exec": [
+							"var responseJSON = JSON.parse(responseBody)\r",
+							"pm.collectionVariables.set(\"lastOrderId\", responseJSON[\"lastOrderId\"])\r",
+							"\r",
+							"tests[\"[INFO] Request: \" + (('data' in request) ? request['data'] : '') ] = true\r",
+							"tests[\"[INFO] Response: \" + responseBody] = true"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "X-Username",
+						"type": "text",
+						"value": "pes"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/otusapp/order",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"otusapp",
+						"order"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get order",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "ca60ce6f-36a1-4a22-afd8-f6458faa8019",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "3c693f90-d355-4d9e-9c57-6cd27606871b",
+						"exec": [
+							"tests[\"[INFO] Request: \" + (('data' in request) ? request['data'] : '') ] = true\r",
+							"tests[\"[INFO] Response: \" + responseBody] = true"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "X-Username",
+						"value": "user1",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/otusapp/order/{{orderId}}",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"otusapp",
+						"order",
+						"{{orderId}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "bf2360da-921f-4ec5-b90f-be923e34c253",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "f7d634a7-fcad-4c8f-a5ae-1ad2dffdc0aa",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "e888a7e5-e462-4707-93a7-ccebfcacccca",
+			"key": "BASE_URL",
+			"value": "arch.homework"
+		},
+		{
+			"id": "9d9ce283-fd70-486d-8331-42e460b711b5",
+			"key": "userId",
+			"value": ""
+		},
+		{
+			"id": "bb40fd42-b5fd-44d3-8a08-a28cd351a2be",
+			"key": "orderId",
+			"value": ""
+		},
+		{
+			"id": "992d08d2-472a-4363-99e0-1a3173c12b10",
+			"key": "lastOrderId",
+			"value": ""
+		},
+		{
+			"id": "69a5bd20-b646-421e-8413-6bc2ac430150",
+			"key": "invoiceId",
+			"value": ""
+		},
+		{
+			"id": "3aed7b60-bf8d-468a-8733-bcbcc5683597",
+			"key": "productId",
+			"value": "3452"
+		},
+		{
+			"id": "b18e4a84-699a-4fc7-9363-9fbb03309c1c",
+			"key": "deliveryHour",
+			"value": "11"
+		},
+		{
+			"id": "077e324c-cd68-41ff-8561-14fce0f8b2b5",
+			"key": "paySystemId",
+			"value": "2"
+		},
+		{
+			"id": "e9d3e54b-d676-4181-82cc-4bf0de51761a",
+			"key": "clientId",
+			"value": "1"
+		}
+	],
+	"protocolProfileBehavior": {}
+}

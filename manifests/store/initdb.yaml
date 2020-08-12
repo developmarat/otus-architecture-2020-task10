@@ -1,0 +1,52 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: task10-store-initdb
+spec:
+  template:
+    metadata:
+      name: task10-store-initdb
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: post-install-job
+          env:
+            - name: DATABASE_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: task10-store-config
+                  key: DATABASE_HOST
+            - name: DATABASE_DB
+              valueFrom:
+                configMapKeyRef:
+                  name: task10-store-config
+                  key: DATABASE_DB
+            - name: DATABASE_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: task10-store-config
+                  key: DATABASE_USER
+            - name: DATABASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: task10-store-secret
+                  key: DATABASE_PASSWORD
+          image: postgres:latest
+          command:
+            - sh
+            - "-c"
+            - |
+              until pg_isready -h $DATABASE_HOST;
+                do echo waiting for database; sleep 2;
+              done;
+              psql postgresql://$DATABASE_USER:$DATABASE_PASSWORD@$DATABASE_HOST/$DATABASE_DB <<'EOF'
+              create table storage_unit
+              (
+                  id         bigserial not null
+                      constraint store_pk
+                          primary key,
+                  product_id bigserial not null,
+                  count      bigint    not null
+              );
+              EOF
+  backoffLimit: 0

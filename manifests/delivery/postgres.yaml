@@ -1,0 +1,65 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-delivery
+  labels:
+    app: postgres-delivery
+spec:
+  type: NodePort
+  ports:
+    - port: 5432
+  selector:
+    app: postgres-delivery
+
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: postgres-delivery-statefulset
+spec:
+  serviceName: "postgres-delivery"
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres-delivery
+  template:
+    metadata:
+      labels:
+        app: postgres-delivery
+    spec:
+      containers:
+        - name: postgres-delivery
+          image: postgres:latest
+          ports:
+            - containerPort: 5432
+              name: postgredb
+          env:
+            - name: POSTGRES_DB
+              valueFrom:
+                configMapKeyRef:
+                  name: task10-delivery-config
+                  key: DATABASE_DB
+            - name: POSTGRES_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: task10-delivery-config
+                  key: DATABASE_USER
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: task10-delivery-secret
+                  key: DATABASE_PASSWORD_WITH_NEW_LINE
+          volumeMounts:
+            - name: postgredb
+              mountPath: /var/lib/postgresql/data
+              subPath: postgres-delivery
+  volumeClaimTemplates:
+    - metadata:
+        name: postgredb
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        storageClassName: standard
+        resources:
+          requests:
+            storage: 1Gi

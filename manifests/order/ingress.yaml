@@ -1,0 +1,15 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: task10-order-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /order/$2
+spec:
+  rules:
+  - host: arch.homework
+    http:
+      paths:
+      - path: /otusapp/order($|/)(.*)
+        backend:
+          serviceName: task10-order-service
+          servicePort: 9000

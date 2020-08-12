@@ -1,0 +1,15 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: task10-delivery-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /srv/delivery/$2
+spec:
+  rules:
+  - host: arch.homework
+    http:
+      paths:
+      - path: /otusapp/srv/delivery($|/)(.*)
+        backend:
+          serviceName: task10-delivery-service
+          servicePort: 9000

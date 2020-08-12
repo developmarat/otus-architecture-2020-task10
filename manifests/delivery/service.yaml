@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: task10-delivery-service
+  labels:
+    app: task10-delivery-app
+spec:
+  selector:
+    app: task10-delivery-app
+  ports:
+    - name: web
+      protocol: TCP
+      port: 9000
+      targetPort: web
+  type: NodePort
